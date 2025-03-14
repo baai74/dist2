@@ -1,0 +1,15 @@
+{
+    "name": "chrome-playwright-setup",
+    "version": "1.0.0",
+    "description": "Installs Chrome browser, Playwright and required desktop environment for Amazon Linux 2023",
+    "changeDescription": "Initial version",
+    "platform": "Linux",
+    "data": "name: chrome-playwright-setup\nschemaVersion: 1.0\nphases:\n  - name: build\n    steps:\n      - name: UpdateSystem\n        action: ExecuteBash\n        inputs:\n          commands:\n            - dnf update -y\n            - dnf install -y epel-release\n\n      - name: InstallDependencies\n        action: ExecuteBash\n        inputs:\n          commands:\n            - dnf install -y wget python3-pip xorg-x11-server-Xvfb mesa-libGL\n            - dnf install -y libX11 libXcomposite libXcursor libXdamage libXext libXi libXtst cups-libs libXScrnSaver libXrandr alsa-lib pango atk at-spi2-atk gtk3\n\n      - name: InstallChrome\n        action: ExecuteBash\n        inputs:\n          commands:\n            - wget https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm\n            - dnf install -y ./google-chrome-stable_current_x86_64.rpm\n            - rm -f ./google-chrome-stable_current_x86_64.rpm\n\n      - name: InstallPlaywright\n        action: ExecuteBash\n        inputs:\n          commands:\n            - python3 -m pip install --upgrade pip\n            - python3 -m pip install playwright\n            - export PLAYWRIGHT_BROWSERS_PATH=/usr/local/playwright-browsers\n            - python3 -m playwright install --with-deps chromium\n\n      - name: ValidateInstallation\n        action: ExecuteBash\n        inputs:\n          commands:\n            - google-chrome --version --no-sandbox\n            - python3 -c \"import playwright; print('Playwright import successful')\"\n            - python3 -c \"from playwright.sync_api import sync_playwright; with sync_playwright() as p: browser = p.chromium.launch(); browser.close(); print('Playwright test successful')\"",
+    "kmsKeyId": "",
+    "tags": {
+        "Project": "cursor-chrome-testing",
+        "Environment": "development",
+        "Owner": "Bart",
+        "Team": "automation-team"
+    }
+} 

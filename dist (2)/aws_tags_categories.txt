@@ -1,0 +1,255 @@
+# AWS TAGS CATEGORIES
+# ==================
+s
+# 1. ORGANIZACYJNE
+# ----------------
+Project: cursor-chrome-testing
+Department: development
+Owner: Bart
+Team: automation-team
+CostCenter: DEV-001
+BusinessUnit: testing
+Division: browser-extensions
+Manager: bart merchbottest@gmail.com
+Company: Merch Analitics
+
+# 2. ŚRODOWISKO
+# -------------
+Environment: development
+Stage: dev
+DeploymentType: automated
+Region: eu-central-1
+AvailabilityZone: eu-central-1a
+InfrastructureType: cloud
+Platform: aws
+ServiceType: testing
+DeploymentMethod: automated
+ReleaseVersion: 1.0.1
+
+# 3. BEZPIECZEŃSTWO
+# ----------------
+SecurityLevel: internal
+DataClassification: test-data
+Compliance: gdpr
+Encryption: required
+AccessLevel: developer
+SecurityGroup: testing-sg
+VPC: testing-vpc
+NetworkTier: Private
+AuditRequired: true
+BackupRequired: true
+
+# 4. MONITOROWANIE
+# ----------------
+Monitoring: enabled
+LogLevel: debug
+AlertGroup: testing-alerts
+MetricCollection: enabled
+HealthCheck: required
+PerformanceTier: standard
+MonitoringFrequency: 5min
+LogRetention: 30days
+AlertThreshold: 80
+MonitoringTool: cloudwatch
+
+# 5. ZARZĄDZANIE ZASOBAMI
+# ---------------------
+ResourceType: testing
+InstanceType: t2.medium
+AutoShutdown: true
+ScalingGroup: auto
+ResourceOwner: merchbottest@gmail.com
+ResourcePurpose: chrome-testing
+ResourceStatus: active
+ResourcePriority: medium
+ResourceLifecycle: development
+ResourceCost: testing
+Service: testing-service
+
+# 6. IMAGE BUILDER
+# ----------------
+ImageType: AMI
+BaseImage: Amazon Linux
+ImageOS: Amazon Linux
+SSMAgent: required
+WorkingDirectory: /tmp
+BuildComponents: 20
+TestComponents: optional
+StorageVolumes: default
+UserData: base64
+ImageOrigin: quick-start
+
+# 7. RECIPE CONFIGURATION
+# ----------------------
+RecipeName: chrome-testing-recipe
+RecipeVersion: 1.0.0
+RecipeDescription: Chrome testing environment
+RecipeType: AMI
+OutputType: Amazon Machine Image
+ComponentSequence: build-test
+RecipeOwner: Bart
+RecipeStatus: active
+
+# 8. PIPELINE SETTINGS
+# -------------------
+PipelineName: chrome-testing-pipeline
+PipelineVersion: 1.0
+PipelineStatus: active
+PipelineOwner: Bart
+PipelineSchedule: daily
+PipelineRegion: eu-central-1
+PipelineType: image-builder
+PipelineDescription: Chrome extension testing pipeline
+
+# 9. COMPONENT SETTINGS
+# --------------------
+name: chrome-playwright-setup
+description: "Installs Chrome browser, Playwright and required desktop environment for Amazon Linux 2023"
+schemaVersion: 1.0
+phases:
+  - name: build
+    steps:
+      - name: LogSystemInfo
+        action: ExecuteBash
+        inputs:
+          commands:
+            - echo "Starting installation process..."
+            - cat /etc/os-release
+            - df -h
+            - free -m
+
+      - name: UpdateSystem
+        action: ExecuteBash
+        inputs:
+          commands:
+            - dnf update -y
+            - dnf install -y epel-release
+
+      - name: InstallBasicDependencies
+        action: ExecuteBash
+        inputs:
+          commands:
+            - dnf install -y wget python3-pip xorg-x11-server-Xvfb mesa-libGL
+            - dnf groupinstall -y "Development Tools"
+
+      - name: InstallChromeDepends
+        action: ExecuteBash
+        inputs:
+          commands:
+            - dnf install -y libX11 libXcomposite libXcursor libXdamage libXext libXi libXtst cups-libs libXScrnSaver libXrandr alsa-lib pango atk at-spi2-atk gtk3
+
+      - name: DownloadChrome
+        action: ExecuteBash
+        inputs:
+          commands:
+            - wget https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
+
+      - name: InstallChrome
+        action: ExecuteBash
+        inputs:
+          commands:
+            - dnf install -y ./google-chrome-stable_current_x86_64.rpm
+            - rm -f ./google-chrome-stable_current_x86_64.rpm
+
+      - name: SetupPython
+        action: ExecuteBash
+        inputs:
+          commands:
+            - python3 -m pip install --upgrade pip
+            - python3 -m pip install wheel setuptools
+
+      - name: InstallPlaywright
+        action: ExecuteBash
+        inputs:
+          commands:
+            - python3 -m pip install playwright
+            - export PLAYWRIGHT_BROWSERS_PATH=/usr/local/playwright-browsers
+            - python3 -m playwright install --with-deps chromium
+
+      - name: ValidateInstallation
+        action: ExecuteBash
+        inputs:
+          commands:
+            - google-chrome --version --no-sandbox
+            - python3 -c "import playwright; print('Playwright import successful')"
+
+  - name: test
+    steps:
+      - name: TestEnvironment
+        action: ExecuteBash
+        inputs:
+          commands:
+            - python3 -c "from playwright.sync_api import sync_playwright; with sync_playwright() as p: browser = p.chromium.launch(); browser.close(); print('Playwright test successful')"
+
+# 10. STORAGE SETTINGS
+# -------------------
+StorageType: EBS
+StorageSize: 30
+StorageIOPS: 3000
+StorageThroughput: 125
+StorageEncryption: enabled
+StorageSnapshot: daily
+StorageBackup: enabled
+StoragePerformance: standard
+StorageAvailability: high
+StorageDurability: 99.999%
+
+# 11. KOSZTY I BUDŻET
+# -----------------
+Budget: 1000
+BillingPeriod: monthly
+CostAllocation: testing
+BudgetOwner: [email]
+CostCenter: TEST-001
+BillingCategory: development
+BudgetAlert: 80
+CostOptimization: enabled
+BudgetThreshold: 90
+FinancialOwner: [email]
+
+# 12. WERSJONOWANIE
+# ----------------
+Version: 1.0
+DeploymentStage: dev
+Release: 2024.01
+BuildNumber: 100
+GitBranch: main
+CodeVersion: 1.0.1
+DeploymentVersion: v1
+ConfigurationVersion: 1.0
+SchemaVersion: 1.0
+APIVersion: v1
+
+# 13. MAINTENANCE
+# -------------
+MaintenanceWindow: 02:00-04:00
+UpdateSchedule: weekly
+PatchLevel: latest
+BackupSchedule: daily
+RetentionPeriod: 30days
+MaintenanceOwner: [email]
+UpdatePolicy: automatic
+BackupPolicy: daily
+CleanupSchedule: weekly
+MaintenancePriority: medium
+
+# 14. SPECYFICZNE DLA AWS
+# ---------------------
+aws:autoscaling:groupName: testing-asg
+aws:cloudformation:stack-name: testing-stack
+aws:ec2:spot-fleet-request-id: spot-fleet-1
+aws:ec2:fleet-id: fleet-1
+aws:ecs:cluster: testing-cluster
+aws:ecs:service: testing-service
+aws:elasticbeanstalk:environment: testing-env
+aws:elasticbeanstalk:application: testing-app
+aws:rds:cluster: testing-db-cluster
+aws:s3:bucket: testing-bucket
+
+# 15. CUSTOM
+# ----------
+CustomTag1: value1
+CustomTag2: value2
+CustomTag3: value3
+CustomTag4: value4
+CustomTag5: value5 

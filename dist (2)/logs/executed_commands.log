@@ -1,0 +1,3 @@
+[2025-03-13 13:37:05] [PROPOSAL] Proponowane polecenie: aws ec2 describe-instances --instance-ids i-0e9d20cafca0291ed --query 'Reservations[*].Instances[*].[State.Name,PublicIpAddress,InstanceType]' --output table
+[2025-03-13 13:37:10] [EXECUTE] Wykonywanie: aws ec2 describe-instances --instance-ids i-0e9d20cafca0291ed --query 'Reservations[*].Instances[*].[State.Name,PublicIpAddress,InstanceType]' --output table
+[2025-03-13 13:37:10] [ERROR] Błąd wykonania: ./auto_approve.sh: line 130: /mnt/c/Users/user/AppData/Roaming/Python/Python312/Scripts/aws: cannot execute: required file not found

@@ -1,0 +1,100 @@
+{
+  "manifest_version": 3,
+  "name": "SmartBot",
+  "version": "1.0.1",
+  "description": "Smart Bot for managing niches, designs, and generating prompts via OpenAI.",
+  "permissions": [
+    "storage",
+    "tabs",
+    "notifications",
+    "scripting",
+    "cookies",
+    "contextMenus",
+    "clipboard"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "service-worker-loader.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "js": [
+        "research.js-loader.js"
+      ],
+      "matches": [
+        "*://www.amazon.com/*",
+        "*://amazon.com/*",
+        "*://www.amazon.co.uk/*",
+        "*://amazon.co.uk/*",
+        "*://www.amazon.de/*",
+        "*://amazon.de/*",
+        "*://www.amazon.fr/*",
+        "*://amazon.fr/*",
+        "*://www.amazon.it/*",
+        "*://amazon.it/*",
+        "*://www.amazon.es/*",
+        "*://amazon.es/*"
+      ],
+      "exclude_matches": [
+        "*://www.amazon.com/*dp*/*",
+        "*://amazon.com/*dp*/*",
+        "*://www.amazon.co.uk/*dp*/*",
+        "*://amazon.co.uk/*dp*/*",
+        "*://www.amazon.de/*dp*/*",
+        "*://amazon.de/*dp*/*",
+        "*://www.amazon.fr/*dp*/*",
+        "*://amazon.fr/*dp*/*",
+        "*://www.amazon.it/*dp*/*",
+        "*://amazon.it/*dp*/*",
+        "*://www.amazon.es/*dp*/*",
+        "*://amazon.es/*dp*/*"
+      ],
+      "run_at": "document_end",
+      "css": [
+        "styles.css"
+      ]
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self';"
+  },
+  "action": {
+    "default_icon": {
+      "16": "img/logo.png"
+    },
+    "default_title": "SmartBot",
+    "default_popup": "popup.html"
+  },
+  "web_accessible_resources": [
+    {
+      "matches": [
+        "*://amazon.co.uk/*",
+        "*://amazon.com/*",
+        "*://amazon.de/*",
+        "*://amazon.es/*",
+        "*://amazon.fr/*",
+        "*://amazon.it/*",
+        "*://www.amazon.co.uk/*",
+        "*://www.amazon.com/*",
+        "*://www.amazon.de/*",
+        "*://www.amazon.es/*",
+        "*://www.amazon.fr/*",
+        "*://www.amazon.it/*"
+      ],
+      "resources": [
+        "*",
+        "assets/research.js-DV70K6iX.js"
+      ],
+      "use_dynamic_url": false
+    }
+  ],
+  "icons": {
+    "16": "img/logo.png",
+    "32": "img/logo.png",
+    "64": "img/logo.png",
+    "128": "img/logo.png"
+  }
+}
